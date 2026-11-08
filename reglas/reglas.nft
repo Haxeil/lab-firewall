@@ -1,0 +1,24 @@
+# Reglas del firewall del laboratorio (nftables).
+# Después de editar este fichero, cárgalo con:
+#     docker compose exec fw aplicar
+#
+# Redes:  oficina 10.10.1.0/24   dmz 10.10.2.0/24   planta 10.10.3.0/24
+# Equipos: pc-oficina 10.10.1.10   pc-ingenieria 10.10.1.20
+#          srv-dmz 10.10.2.10      plc 10.10.3.10
+
+table inet filtro {
+
+    chain forward {
+        # Tráfico que ATRAVIESA el firewall de una red a otra.
+        type filter hook forward priority 0; policy accept;
+
+        # Escribe aquí tus reglas, una por línea. Ejemplos de sintaxis:
+        #   ct state established,related accept
+        #   ip saddr 10.10.1.0/24 ip daddr 10.10.2.10 tcp dport { 80, 443 } accept
+        #   ip saddr 10.10.1.20 ip daddr 10.10.3.10 tcp dport 502 accept
+        #   ip protocol icmp ip daddr 10.10.2.0/24 accept
+        #   tcp dport 23 counter drop
+
+        counter comment "paquetes que llegan al final de la cadena"
+    }
+}
